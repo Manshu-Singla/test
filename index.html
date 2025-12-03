@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Devanshi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --secondary-gradient: linear-gradient(to right, #ff7e5f, #feb47b);
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-light: rgba(255, 255, 255, 0.95);
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --spacing-xs: 10px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --border-radius: 20px;
+            --border-radius-sm: 12px;
+            --border-radius-lg: 28px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: var(--spacing-sm);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Confetti */
+        #confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Music Player - Fixed position for mobile */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            width: auto;
+        }
+
+        .music-player.compact {
+            padding: 10px 15px;
+            gap: 12px;
+        }
+
+        .music-player.hidden {
+            transform: translateY(100px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .music-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 0; /* For text truncation */
+        }
+
+        .music-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .music-artist {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-btn {
+            background: var(--secondary-gradient);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .music-btn:active {
+            transform: scale(0.95);
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100px;
+        }
+
+        .volume-slider {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Intro Overlay - Mobile First */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+            padding: var(--spacing-sm);
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        #intro-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .intro-content {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--border-radius-lg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: var(--spacing-xl) var(--spacing-md);
+            max-width: 500px;
+            width: 100%;
+            animation: subtle-pulse 3s infinite;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .intro-content h1 {
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-md);
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .intro-content p {
+            font-size: 1rem;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.85;
+            padding: 0 var(--spacing-sm);
+        }
+
+        .music-toggle-intro {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: var(--spacing-md);
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #ff7e5f;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        #open-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 280px;
+        }
+
+        #open-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Main Card */
+        #main-card {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            animation: fadeInScale 0.8s ease forwards;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border-radius: var(--border-radius-lg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            padding: var(--spacing-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xl);
+        }
+
+        /* Birthday Heading */
+        .birthday-heading {
+            font-size: 2rem;
+            line-height: 1.2;
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .birthday-heading span {
+            display: block;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 300%;
+            animation: gradient 5s ease infinite;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Typewriter */
+        .typewriter-container {
+            margin-bottom: var(--spacing-lg);
+            min-height: 60px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--border-radius-sm);
+            padding: var(--spacing-sm);
+            border-left: 4px solid #ff7e5f;
+        }
+
+        .typewriter-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            border-right: 2px solid white;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            padding-right: 5px;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag i {
+            font-size: 0.9rem;
+        }
+
+        /* Photo Frame */
+        .photo-frame {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: float 6s ease-in-out infinite;
+            order: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .photo {
+            width: 100%;
+            height: 280px;
+            background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            color: white;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Message Card */
+        .message-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+        }
+
+        .message-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .message-text {
+            margin-bottom: var(--spacing-md);
+            opacity: 0.9;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+
+        .signature {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .signature span {
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ========== MEDIA QUERIES ========== */
+        
+        /* Small phones */
+        @media (max-width: 360px) {
+            .birthday-heading {
+                font-size: 1.7rem;
+            }
+            
+            .typewriter-text {
+                font-size: 1.1rem;
+            }
+            
+            .photo {
+                height: 240px;
+            }
+            
+            .tag {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            
+            .music-player {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+                justify-content: space-between;
+                max-width: none;
+            }
+            
+            .music-title {
+                max-width: 100px;
+            }
+            
+            .volume-container {
+                display: none;
+            }
+        }
+
+        /* Medium phones */
+        @media (min-width: 361px) and (max-width: 480px) {
+            .music-player {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+                justify-content: space-between;
+                max-width: none;
+            }
+            
+            .volume-container {
+                display: none;
+            }
+        }
+
+        /* Tablets and larger phones */
+        @media (min-width: 576px) {
+            .birthday-heading {
+                font-size: 2.5rem;
+            }
+            
+            .typewriter-text {
+                font-size: 1.4rem;
+            }
+            
+            .photo {
+                height: 320px;
+            }
+            
+            .intro-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .message-text {
+                font-size: 1rem;
+            }
+            
+            .music-player {
+                bottom: 20px;
+                right: 20px;
+                left: auto;
+            }
+            
+            .volume-container {
+                display: flex;
+            }
+        }
+
+        /* Landscape phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .intro-content {
+                padding: var(--spacing-md);
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .intro-content h1 {
+                font-size: 1.8rem;
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .card {
+                padding: var(--spacing-sm);
+                gap: var(--spacing-md);
+            }
+            
+            .photo {
+                height: 200px;
+            }
+            
+            .music-player {
+                bottom: 10px;
+                right: 10px;
+                padding: 8px 15px;
+            }
+            
+            .music-btn {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        /* Tablets */
+        @media (min-width: 768px) {
+            body {
+                padding: var(--spacing-lg);
+            }
+            
+            .card {
+                padding: var(--spacing-xl);
+                flex-direction: row;
+                gap: var(--spacing-xl);
+            }
+            
+            .photo-frame {
+                order: 1;
+                flex: 1;
+            }
+            
+            .left-content {
+                flex: 1.2;
+            }
+            
+            .photo {
+                height: 400px;
+            }
+            
+            .birthday-heading {
+                font-size: 2.8rem;
+                text-align: left;
+            }
+            
+            .birthday-heading span {
+                display: inline;
+            }
+            
+            .typewriter-container {
+                padding: var(--spacing-md);
+            }
+            
+            .tags {
+                justify-content: flex-start;
+            }
+            
+            .message-title {
+                justify-content: flex-start;
+            }
+            
+            .signature {
+                text-align: right;
+            }
+            
+            .signature span {
+                display: inline;
+                margin-left: 10px;
+            }
+            
+            .music-player {
+                bottom: 30px;
+                right: 30px;
+            }
+        }
+
+        /* Large screens */
+        @media (min-width: 992px) {
+            .birthday-heading {
+                font-size: 3.2rem;
+            }
+            
+            .typewriter-text {
+                font-size: 1.8rem;
+            }
+            
+            .photo {
+                height: 500px;
+            }
+            
+            .intro-content h1 {
+                font-size: 2.8rem;
+            }
+            
+            .music-player {
+                bottom: 40px;
+                right: 40px;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            button, .tag, .music-btn, .toggle-slider {
+                min-height: 44px;
+            }
+            
+            #open-btn {
+                padding: 18px 40px;
+            }
+            
+            .music-btn {
+                width: 44px;
+                height: 44px;
+            }
+            
+            .volume-slider::-webkit-slider-thumb {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .volume-slider::-moz-range-thumb {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .photo-frame {
+                animation: none;
+            }
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --glass-bg: rgba(0, 0, 0, 0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti Container -->
+    <div id="confetti-container"></div>
+
+    <!-- Music Player -->
+    <div class="music-player hidden" id="musicPlayer">
+        <div class="music-info">
+            <div class="music-title" id="musicTitle">Happy Birthday Song</div>
+            <div class="music-artist" id="musicArtist">Birthday Music</div>
+        </div>
+        <div class="music-controls">
+            <button class="music-btn" id="prevBtn" aria-label="Previous song">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="music-btn" id="playPauseBtn" aria-label="Play/Pause">
+                <i class="fas fa-play" id="playIcon"></i>
+            </button>
+            <button class="music-btn" id="nextBtn" aria-label="Next song">
+                <i class="fas fa-step-forward"></i>
+            </button>
+            <div class="volume-container">
+                <i class="fas fa-volume-up" style="color: rgba(255,255,255,0.7); font-size: 0.9rem;"></i>
+                <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider" aria-label="Volume">
+            </div>
+        </div>
+    </div>
+
+    <!-- Intro Overlay -->
+    <div id="intro-overlay">
+        <div class="intro-content">
+            <h1>A Birthday Surprise for You!</h1>
+            <p>Tap the button to reveal a special birthday message crafted just for you</p>
+            
+            <div class="music-toggle-intro">
+                <span>Background Music:</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="musicToggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <button id="open-btn" aria-label="Open birthday wish">
+                <i class="fas fa-gift"></i> Open your birthday wish
+            </button>
+            
+            <p style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7;">
+                <i class="fas fa-music"></i> Music will play automatically
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Card -->
+    <main id="main-card">
+        <div class="card">
+            <!-- Left Content -->
+            <div class="left-content">
+                <h1 class="birthday-heading">
+                    Happy Birthday,<br><span>Devanshi Jindal</span>
+                </h1>
+                
+                <!-- Typewriter -->
+                <div class="typewriter-container">
+                    <div id="typewriter" class="typewriter-text"></div>
+                </div>
+                
+                <!-- Tags -->
+                <div class="tags">
+                    <div class="tag">
+                        <i class="fas fa-user-circle"></i> Someone special
+                    </div>
+                    <div class="tag">
+                        <i class="fas fa-smile"></i> Celebratory
+                    </div>
+                    <div class="tag">
+                        <i class="fas fa-clock"></i> 12:00 AM
+                    </div>
+                    <div class="tag">
+                        <i class="fas fa-music"></i> With Music
+                    </div>
+                </div>
+                
+                <!-- Message Card -->
+                <article class="message-card">
+                    <h2 class="message-title">
+                        <i class="fas fa-heart" style="color: #ff7e5f;"></i> A note from my heart 💌
+                    </h2>
+                    
+                    <p class="message-text">
+                        On this beautiful day, I want to celebrate the incredible person you are. Your presence brings joy to everyone around you, and your smile has the power to light up the darkest rooms.
+                    </p>
+                    
+                    <p class="message-text">
+                        You possess a rare combination of strength, kindness, and grace that inspires everyone who knows you. Watching you grow and achieve your dreams has been a privilege, and I know the future holds even greater things for you.
+                    </p>
+                    
+                    <p class="message-text">
+                        May this birthday mark the beginning of your most amazing year yet. May you receive all the love you give, achieve all your goals, and find happiness in every moment.
+                    </p>
+                    
+                    <p class="message-text">
+                        Remember that you are loved, appreciated, and cherished more than words can express. Here's to celebrating you today and always!
+                    </p>
+                    
+                    <div class="signature">
+                        With all my love,<br>
+                        <span>Your Secret Admirer</span>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- Photo Frame -->
+            <div class="photo-frame">
+                <div class="photo" id="birthday-photo"></div>
+                <div class="photo-overlay">
+                    <i class="fas fa-camera"></i> Devanshi Jindal - Shining Bright
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>Made with <i class="fas fa-heart" style="color: #ff7e5f;"></i> for Devanshi's special day • Includes background music</p>
+        </footer>
+    </main>
+
+    <!-- Hidden Audio Element -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-443.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-443.mp3" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Alternative Birthday Music URLs (if needed):
+    1. https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-443.mp3
+    2. https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3
+    3. https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3
+    -->
+
+<script>
+  // ============================================
+  // CONFIGURATION - EDIT THESE VALUES
+  // ============================================
+
+  // Birthday person name
+  const BIRTHDAY_PERSON_NAME = "Devanshi Jindal";
+
+  // Your name
+  const MY_NAME = "Your Secret Admirer";
+
+  // Typewriter text
+  const TYPEWRITER_TEXT =
+    "May your day be filled with joy, laughter, and beautiful moments!";
+
+  // Photo URL
+  const PHOTO_URL =
+    "/Screenshot 2025-12-03 234754.png";
+
+  // Message paragraphs
+  const MESSAGE_PARAGRAPHS = [
+    "On this beautiful day, I want to celebrate the incredible person you are. Your presence brings joy to everyone around you, and your smile has the power to light up the darkest rooms.",
+    "You possess a rare combination of strength, kindness, and grace that inspires everyone who knows you. Watching you grow and achieve your dreams has been a privilege, and I know the future holds even greater things for you.",
+    "May this birthday mark the beginning of your most amazing year yet. May you receive all the love you give, achieve all your goals, and find happiness in every moment.",
+    "Remember that you are loved, appreciated, and cherished more than words can express. Here's to celebrating you today and always!"
+  ];
+
+  // Music Configuration
+const MUSIC_CONFIG = {
+    enabled: true,
+    tracks: [
+        {
+            title: "Happy Birthday",
+            artist: "Birthday Song",
+            src: "/WhatsApp Audio 2025-12-03 at 23.39.08_de074ad4.mp3"
+        },
+    ]
+};
+
+  // ============================================
+  // END OF CONFIGURATION
+  // ============================================
+
+  // DOM elements
+  const introOverlay = document.getElementById("intro-overlay");
+  const openBtn = document.getElementById("open-btn");
+  const mainCard = document.getElementById("main-card");
+  const typewriterElement = document.getElementById("typewriter");
+  const photoElement = document.getElementById("birthday-photo");
+  const musicPlayer = document.getElementById("musicPlayer");
+  const musicToggle = document.getElementById("musicToggle");
+  const backgroundMusic = document.getElementById("backgroundMusic");
+
+  // Music elements
+  const musicTitle = document.getElementById("musicTitle");
+  const musicArtist = document.getElementById("musicArtist");
+  const playPauseBtn = document.getElementById("playPauseBtn");
+  const playIcon = document.getElementById("playIcon");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const volumeSlider = document.getElementById("volumeSlider");
+
+  // Music state
+  let currentTrackIndex = 0;
+  let isMusicPlaying = false;
+  let isMusicEnabled = MUSIC_CONFIG.enabled;
+
+  // Confetti state (IMPORTANT: single interval only)
+  let confettiInterval = null;
+
+  // Initialize page
+  document.addEventListener("DOMContentLoaded", function () {
+    // Set signature name
+    document.querySelector(".signature span").textContent = MY_NAME;
+
+    // Set photo URL
+    photoElement.style.backgroundImage = `url('${PHOTO_URL}')`;
+
+    // Set message paragraphs
+    const messageTextElements = document.querySelectorAll(".message-text");
+    MESSAGE_PARAGRAPHS.forEach((paragraph, index) => {
+      if (messageTextElements[index]) {
+        messageTextElements[index].textContent = paragraph;
+      }
+    });
+
+    // Initialize music
+    initializeMusic();
+
+    // Set music toggle state
+    musicToggle.checked = isMusicEnabled;
+
+    // Adjust music player for mobile
+    adjustMusicPlayerForScreen();
+
+    // Touch-friendly cursor
+    if ("ontouchstart" in window) {
+      document
+        .querySelectorAll("button, .tag")
+        .forEach((element) => (element.style.cursor = "pointer"));
+    }
+  });
+
+  // Initialize music system
+  function initializeMusic() {
+    // Set first track
+    loadTrack(currentTrackIndex);
+
+    // Set initial volume
+    backgroundMusic.volume = volumeSlider.value / 100;
+
+    // Update music player UI
+    updateMusicPlayer();
+
+    // Events
+    backgroundMusic.addEventListener("ended", playNextTrack);
+    playPauseBtn.addEventListener("click", togglePlayPause);
+    prevBtn.addEventListener("click", playPreviousTrack);
+    nextBtn.addEventListener("click", playNextTrack);
+    volumeSlider.addEventListener("input", updateVolume);
+    musicToggle.addEventListener("change", toggleMusicEnabled);
+
+    // Play when user clicks open button (allowed by browser)
+    openBtn.addEventListener("click", function () {
+      if (isMusicEnabled && !isMusicPlaying) {
+        setTimeout(() => {
+          playMusic();
+        }, 500);
+      }
+    });
+  }
+
+  // Load a track
+  function loadTrack(index) {
+    if (MUSIC_CONFIG.tracks[index]) {
+      const track = MUSIC_CONFIG.tracks[index];
+      backgroundMusic.src = track.src;
+      musicTitle.textContent = track.title;
+      musicArtist.textContent = track.artist;
+      currentTrackIndex = index;
+    }
+  }
+
+  // Play/pause music
+  function togglePlayPause() {
+    if (!isMusicEnabled) return;
+
+    if (isMusicPlaying) {
+      pauseMusic();
+    } else {
+      playMusic();
+    }
+  }
+
+  function playMusic() {
+    if (!isMusicEnabled) return;
+
+    const playPromise = backgroundMusic.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          isMusicPlaying = true;
+          playIcon.className = "fas fa-pause";
+          musicPlayer.classList.remove("hidden");
+        })
+        .catch((error) => {
+          console.log("Autoplay prevented or failed:", error);
+          isMusicPlaying = false;
+          playIcon.className = "fas fa-play";
+        });
+    }
+  }
+
+  function pauseMusic() {
+    backgroundMusic.pause();
+    isMusicPlaying = false;
+    playIcon.className = "fas fa-play";
+  }
+
+  function playNextTrack() {
+    currentTrackIndex =
+      (currentTrackIndex + 1) % MUSIC_CONFIG.tracks.length;
+    loadTrack(currentTrackIndex);
+    if (isMusicPlaying) playMusic();
+  }
+
+  function playPreviousTrack() {
+    currentTrackIndex =
+      (currentTrackIndex - 1 + MUSIC_CONFIG.tracks.length) %
+      MUSIC_CONFIG.tracks.length;
+    loadTrack(currentTrackIndex);
+    if (isMusicPlaying) playMusic();
+  }
+
+  function updateVolume() {
+    backgroundMusic.volume = volumeSlider.value / 100;
+  }
+
+  function toggleMusicEnabled() {
+    isMusicEnabled = musicToggle.checked;
+
+    if (isMusicEnabled) {
+      musicPlayer.classList.remove("hidden");
+      if (mainCard.style.display === "block" && !isMusicPlaying) {
+        playMusic();
+      }
+    } else {
+      pauseMusic();
+      musicPlayer.classList.add("hidden");
+    }
+  }
+
+  function updateMusicPlayer() {
+    if (isMusicEnabled) {
+      musicPlayer.classList.remove("hidden");
+    } else {
+      musicPlayer.classList.add("hidden");
+    }
+  }
+
+  function adjustMusicPlayerForScreen() {
+    const isSmallScreen = window.innerWidth <= 480;
+    if (isSmallScreen) {
+      musicPlayer.classList.add("compact");
+    } else {
+      musicPlayer.classList.remove("compact");
+    }
+  }
+
+  // Open button click
+  openBtn.addEventListener("click", function () {
+    openBtn.disabled = true;
+    openBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening...';
+
+    introOverlay.classList.add("hidden");
+
+    setTimeout(() => {
+      mainCard.style.display = "block";
+      startTypewriter();
+      startConfetti(); // ✅ single confetti loop
+      if (isMusicEnabled) {
+        musicPlayer.classList.remove("hidden");
+      }
+      announceToScreenReader(
+        "Birthday message revealed! Happy birthday Devanshi!"
+      );
+    }, 800);
+  });
+
+  // Typewriter effect
+  function startTypewriter() {
+    let i = 0;
+    const speed = 50;
+
+    function typeWriter() {
+      if (i < TYPEWRITER_TEXT.length) {
+        typewriterElement.innerHTML += TYPEWRITER_TEXT.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+    }
+
+    typewriterElement.innerHTML = "";
+    typeWriter();
+  }
+
+  // --------- CONFETTI (fixed: NO nested setInterval) ----------
+  function createConfettiBurst() {
+    const container = document.getElementById("confetti-container");
+    const colors = [
+      "#ff7e5f",
+      "#feb47b",
+      "#6a11cb",
+      "#2575fc",
+      "#2af598",
+      "#009efd"
+    ];
+
+    const isMobile = window.innerWidth <= 768;
+    const confettiCount = isMobile ? 60 : 120;
+
+    for (let i = 0; i < confettiCount; i++) {
+      const confetti = document.createElement("div");
+      confetti.setAttribute("aria-hidden", "true");
+
+      const size = isMobile
+        ? Math.random() * 8 + 4
+        : Math.random() * 10 + 5;
+      confetti.style.width = size + "px";
+      confetti.style.height = size + "px";
+      confetti.style.backgroundColor =
+        colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.borderRadius = Math.random() > 0.5 ? "50%" : "0";
+      confetti.style.left = Math.random() * 100 + "vw";
+      confetti.style.top = "-10px";
+      confetti.style.opacity = Math.random() * 0.7 + 0.3;
+      confetti.style.position = "absolute";
+      confetti.style.zIndex = "10";
+
+      container.appendChild(confetti);
+
+      const duration = isMobile
+        ? Math.random() * 2000 + 2000
+        : Math.random() * 3000 + 3000;
+
+      const animation = confetti.animate(
+        [
+          { transform: "translate(0, 0)", opacity: 1 },
+          {
+            transform: `translate(${Math.random() * 100 - 50}px, 100vh) rotate(${Math.random() *
+              360}deg)`,
+            opacity: 0
+          }
+        ],
+        {
+          duration: duration,
+          easing: "cubic-bezier(0.215, 0.61, 0.355, 1)"
+        }
+      );
+
+      animation.onfinish = () => {
+        if (confetti.parentNode) confetti.remove();
+      };
+    }
+  }
+
+  function startConfetti() {
+    const isMobile = window.innerWidth <= 768;
+    const intervalTime = isMobile ? 3000 : 2000;
+
+    // first burst
+    createConfettiBurst();
+
+    // clear old interval if exists
+    if (confettiInterval) clearInterval(confettiInterval);
+
+    // set single interval
+    confettiInterval = setInterval(createConfettiBurst, intervalTime);
+  }
+
+  // Screen reader helper
+  function announceToScreenReader(message) {
+    const announcement = document.createElement("div");
+    announcement.setAttribute("aria-live", "polite");
+    announcement.setAttribute("aria-atomic", "true");
+    announcement.style.position = "absolute";
+    announcement.style.left = "-9999px";
+    announcement.textContent = message;
+    document.body.appendChild(announcement);
+
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  }
+
+  // Resize / orientation: just adjust layout, don't start new intervals
+  let resizeTimer;
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      adjustMusicPlayerForScreen();
+    }, 250);
+  });
+
+  window.addEventListener("orientationchange", function () {
+    setTimeout(() => {
+      adjustMusicPlayerForScreen();
+    }, 300);
+  });
+</script>
+
+</body>
+</html>
